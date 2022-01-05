@@ -36,17 +36,18 @@ def inject(sb3, ttf, chars):
     pngdata = render(None, ttf, chars)
     for i in pngdata:
         md5id = md5(pngdata[i]).hexdigest()
-        costumes.append({"assetId":md5id,"name":"","bitmapResolution":1,"md5ext":md5id+".png","dataFormat":"png","rotationCenterX":0,"rotationCenterY":0})
+        costumes.append({"assetId":md5id,"name":i,"bitmapResolution":1,"md5ext":md5id+".png","dataFormat":"png","rotationCenterX":0,"rotationCenterY":0})
         file = open("temp/" + md5id + ".png", 'w')
         file = open("temp/" + md5id + ".png", 'wb')
         file.write(pngdata[i])
     newsprite["costumes"] = costumes
     pjson["targets"].append(newsprite)
-
+    open("temp/project.json", 'w').write(json.dumps(pjson))
     zip = zipfile.ZipFile("output.sb3", 'w')
     for root, directories, files in os.walk("temp"):
         for filename in files:
             filepath = os.path.join(root, filename)
+            print("Injecting: " + filepath)
             zip.write(filepath)
     
     
