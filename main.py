@@ -3,6 +3,7 @@ import os
 import json
 import zipfile
 import io
+import time
 from hashlib import md5
 
 def render(dir : str, path : str, chars : str):
@@ -31,12 +32,12 @@ def inject(sb3, ttf, chars):
         os.mkdir("temp")
     zipfile.ZipFile(sb3).extractall("temp")
     pjson = json.load(open("temp/project.json", 'r'))
-    newsprite = {"isStage":False,"name":"/","variables":{},"lists":{},"broadcasts":{},"blocks":{},"comments":{},"currentCostume":0,"costumes":[],"sounds":[],"volume":100,"layerOrder":0,"tempo":60,"videoTransparency":50,"videoState":"on","textToSpeechLanguage":None}
+    newsprite = {"isStage":False,"name":ttf.split('.')[0],"variables":{},"lists":{},"broadcasts":{},"blocks":{},"comments":{},"currentCostume":0,"costumes":[],"sounds":[],"volume":100,"layerOrder":1,"visible":True,"x":0,"y":0,"size":100,"direction":90,"draggable":False,"rotationStyle":"all around"}
     costumes = []
     pngdata = render(None, ttf, chars)
     for i in pngdata:
         md5id = md5(pngdata[i]).hexdigest()
-        costumes.append({"assetId":md5id,"name":i,"bitmapResolution":1,"md5ext":md5id+".png","dataFormat":"png","rotationCenterX":0,"rotationCenterY":0})
+        costumes.append({"assetId":md5id,"name":i,"bitmapResolution":1,"md5ext":md5id + ".png","dataFormat":"png","rotationCenterX":25,"rotationCenterY":25})
         file = open("temp/" + md5id + ".png", 'w')
         file = open("temp/" + md5id + ".png", 'wb')
         file.write(pngdata[i])
@@ -48,7 +49,8 @@ def inject(sb3, ttf, chars):
         for filename in files:
             filepath = os.path.join(root, filename)
             print("Injecting: " + filepath)
-            zip.write(filepath)
+            time.sleep(0.002)
+            zip.write("./" + filepath)
     
     
 
