@@ -37,7 +37,7 @@ def inject(sb3, ttf, chars):
     pngdata = render(None, ttf, chars)
     for i in pngdata:
         md5id = md5(pngdata[i]).hexdigest()
-        costumes.append({"assetId":md5id,"name":i,"bitmapResolution":1,"md5ext":md5id + ".png","dataFormat":"png","rotationCenterX":25,"rotationCenterY":25})
+        costumes.append({"assetId":md5id,"name":i,"bitmapResolution":2,"md5ext":md5id + ".png","dataFormat":"png","rotationCenterX":25,"rotationCenterY":25})
         file = open("temp/" + md5id + ".png", 'w')
         file = open("temp/" + md5id + ".png", 'wb')
         file.write(pngdata[i])
@@ -45,12 +45,11 @@ def inject(sb3, ttf, chars):
     pjson["targets"].append(newsprite)
     open("temp/project.json", 'w').write(json.dumps(pjson))
     zip = zipfile.ZipFile("output.sb3", 'w')
-    for root, directories, files in os.walk("temp"):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            print("Injecting: " + filepath)
-            time.sleep(0.002)
-            zip.write("./" + filepath)
+    for file in os.listdir("temp"):
+        filepath = os.path.join(file)
+        print("Injecting: " + filepath)
+        time.sleep(0.002)
+        zip.write("temp/" + filepath)
     
     
 
