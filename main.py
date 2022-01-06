@@ -101,5 +101,5 @@ chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+`12345
 #render("OpenSans", "OpenSans.ttf", chars)
 #print("Font is rendered!")
 #inject("project_input.sb3", "Karla-Bold.ttf", chars)
-createSprite("SFpro.OTF", chars)
+inject("project_input.sb3", "SFpro.OTF", chars)
 print("Injected font!")
