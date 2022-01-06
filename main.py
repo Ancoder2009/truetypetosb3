@@ -50,12 +50,17 @@ def inject(sb3, ttf, chars):
         print("Injecting: " + filepath)
         time.sleep(0.002)
         zip.write("temp/" + filepath)
-    
-    
 
-chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+`1234567890-={}[];':\"'1234567890"
+    for file in os.listdir("temp"):
+        filepath = os.path.join(file)
+        print("Cleaning Up: " + filepath)
+        time.sleep(0.002)
+        os.remove("temp/" + filepath)
+    os.removedirs("temp")
+
+chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+`1234567890-={}[];':\"1234567890"
     
 #render("OpenSans", "OpenSans.ttf", chars)
 #print("Font is rendered!")
-inject("project_input.sb3", "OpenSans.ttf", chars)
+inject("project_input.sb3", "Karla-Bold.ttf", chars)
 print("Injected font!")
