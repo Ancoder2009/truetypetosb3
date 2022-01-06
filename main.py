@@ -4,6 +4,7 @@ import json
 import zipfile
 import io
 import time
+import sys
 import random
 from hashlib import md5
 
@@ -17,7 +18,10 @@ def render(dir : str, path : str, chars : str):
         raise FileNotFoundError("File \"" + path + "\"")
     font = ImageFont.truetype(path, size=28)
     letters = dict()
+    progress = 0
     for i in chars:
+        sys.stdout.write("\r" + "Copying letter " + i)
+        progress += 1
         image = Image.new(mode="RGBA", size=(50, 50), color=None)
         width_dump += str(font.getsize(i)[0]) + "\n"
         draw = ImageDraw.Draw(image)
@@ -35,7 +39,7 @@ def render(dir : str, path : str, chars : str):
     current_width_dump = width_dump.split("\n")
     return letters
 
-def createSprite(ttf, chars):
+def createSprite(ttf, chars, return_bytes):
     if not os.path.exists("temp"):
         os.mkdir("temp")
     newsprite = {"isStage":False,"name":ttf.split('.')[0],"variables":{},"lists":{},"broadcasts":{},"blocks":{},"comments":{},"currentCostume":0,"costumes":[],"sounds":[],"volume":100,"layerOrder":1,"visible":True,"x":0,"y":0,"size":100,"direction":90,"draggable":False,"rotationStyle":"all around"}
@@ -50,19 +54,26 @@ def createSprite(ttf, chars):
         file.write(pngdata[i])
         newsprite["costumes"] = costumes
     open("temp/sprite.json", 'w').write(json.dumps(newsprite))
-    zip = zipfile.ZipFile("output.sprite3", 'w')
+    zip = zipfile.ZipFile(ttf.split(".")[0] + ".sprite3", 'w')
+    data = None
+    if return_bytes:
+        data = io.BytesIO()
+        zip = zipfile.ZipFile(data, 'w')
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
-        print("Creating Asset: " + filepath)
+        sys.stdout.write("\r" + "Creating Asset: temp/" + filepath)
         zip.write("temp/" + filepath)
 
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
-        print("Cleaning Up: " + filepath)
+        sys.stdout.write("\r" + "Cleaning Up: temp/" + filepath)
         os.remove("temp/" + filepath)
     os.removedirs("temp")
+    print("\n")
+    if return_bytes:
+        return data
     
-def inject(sb3, ttf, chars):
+def inject(sb3, ttf, chars, return_bytes):
     if not os.path.exists("temp"):
         os.mkdir("temp")
     zipfile.ZipFile(sb3).extractall("temp")
@@ -80,22 +91,30 @@ def inject(sb3, ttf, chars):
     newsprite["costumes"] = costumes
     pjson["targets"].append(newsprite)
     open("temp/project.json", 'w').write(json.dumps(pjson))
-    zip = zipfile.ZipFile("output.sb3", 'w')
+    zip = zipfile.ZipFile(ttf.split(".")[0] + ".sb3", 'w')
+    data = None
+    if return_bytes:
+        data = io.BytesIO()
+        zip = zipfile.ZipFile(data, 'w')
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
-        print("Injecting: " + filepath)
+        sys.stdout.write("\r" + "Injecting: temp/" + filepath)
         zip.write("temp/" + filepath)
 
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
-        print("Cleaning Up: " + filepath)
+        sys.stdout.write("\r" + "Cleaning Up: temp/" + filepath)
         os.remove("temp/" + filepath)
     os.removedirs("temp")
+    print("\n")
+    if return_bytes:
+        return data
 
 chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+`1234567890-={}[];':\"., "
     
 #render("OpenSans", "OpenSans.ttf", chars)
 #print("Font is rendered!")
 #inject("project_input.sb3", "Karla-Bold.ttf", chars)
-createSprite("SFpro.OTF", chars)
-print("Injected font!")
+#bts = createSprite("SFpro.OTF", chars, True)
+#print(bts.getvalue())
+#print("Injected font!")
