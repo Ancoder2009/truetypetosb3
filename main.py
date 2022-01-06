@@ -54,13 +54,11 @@ def createSprite(ttf, chars):
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
         print("Creating Asset: " + filepath)
-        time.sleep(0.002)
         zip.write("temp/" + filepath)
 
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
         print("Cleaning Up: " + filepath)
-        time.sleep(0.002)
         os.remove("temp/" + filepath)
     os.removedirs("temp")
     
@@ -86,20 +84,18 @@ def inject(sb3, ttf, chars):
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
         print("Injecting: " + filepath)
-        time.sleep(0.002)
         zip.write("temp/" + filepath)
 
     for file in os.listdir("temp"):
         filepath = os.path.join(file)
         print("Cleaning Up: " + filepath)
-        time.sleep(0.002)
         os.remove("temp/" + filepath)
     os.removedirs("temp")
 
-chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+`1234567890-={}[];':\"1234567890.,"
+chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+`1234567890-={}[];':\"., "
     
 #render("OpenSans", "OpenSans.ttf", chars)
 #print("Font is rendered!")
 #inject("project_input.sb3", "Karla-Bold.ttf", chars)
-inject("project_input.sb3", "SFpro.OTF", chars)
+createSprite("SFpro.OTF", chars)
 print("Injected font!")
