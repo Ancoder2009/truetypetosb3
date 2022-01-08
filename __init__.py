@@ -114,7 +114,7 @@ chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+`12345
     
 #render("OpenSans", "OpenSans.ttf", chars)
 #print("Font is rendered!")
-#inject("project_input.sb3", "Karla-Bold.ttf", chars)
+inject("project_input.sb3", "Roboto-Light.ttf", chars, False)
 #bts = createSprite("SFpro.OTF", chars, True)
 #print(bts.getvalue())
 #print("Injected font!")
